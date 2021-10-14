@@ -62,12 +62,12 @@ class PCAssetList(ImportExportActionModelAdmin):
 
 # 名称、备注
 class PCAreaList(admin.ModelAdmin):
-    list_display = ['name', 'subnet', 'describe']
+    list_display = ['id', 'name', 'subnet', 'describe']
 # 分类排序
 
 
 class PCManufacturerList(admin.ModelAdmin):
-    list_display = ['name', 'manufacturer', 'contact', 'phone', 'describe']
+    list_display = ['id', 'name', 'manufacturer', 'contact', 'phone', 'describe']
 # 分类排序
 
 

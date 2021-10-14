@@ -178,13 +178,18 @@ SIMPLEUI_CONFIG = {
 
         {
             'app': 'assets',
-            'name': 'IDC资产管理',
+            'name': 'IDC设备管理',
             'icon': 'fas fa-archive',
             'models': [
                 {
-                    'name': 'IDC资产信息',
+                    'name': '物理设备信息',
                     'url': 'assets/asset',
                     'icon': 'fas fa-archive'
+                },
+                {
+                    'name': '虚拟设备信息',
+                    'url': 'assets/virtualasset',
+                    'icon': 'fas fa-boxes'
                 },
                 {
                     'name': '所属区域',
@@ -205,11 +210,11 @@ SIMPLEUI_CONFIG = {
         },
         {
             'app': 'pc_assets',
-            'name': '终端资产管理',
-            'icon': 'fas fa-archive',
+            'name': '终端设备管理',
+            'icon': 'fas fa-band-aid',
             'models': [
                 {
-                    'name': '终端资产信息',
+                    'name': '终端设备信息',
                     'url': 'pc_assets/pcassets',
                     'icon': 'fas fa-archive'
                 },
@@ -235,6 +240,16 @@ SIMPLEUI_CONFIG = {
                     'name': '标签管理',
                     'url': 'labels/labels',
                     'icon': 'fas fa-bezier-curve'
+                },
+                {
+                    'name': '设备清单',
+                    'url': 'labels/scandevices',
+                    'icon': 'fab fa-avianex'
+                },
+                {
+                    'name': '接口管理',
+                    'url': 'labels/monitordevices',
+                    'icon': 'fas fa-bacon'
                 },
             ]
         },
@@ -297,15 +312,17 @@ SIMPLEUI_CONFIG = {
             ]
         },
 
-        # {
-        #     'name': 'cabinet',
-        #     'icon': 'fas fa-code',
-        #     'url': 'http://asset.seedien.net/cabinet',
-        # },
-
         {
-            'name': 'Github',
-            'url': 'https://gitee.com/attacker/cmdb',
-            'icon': 'fab fa-github'
-        }]
+            'name': '版本信息',
+            'icon': 'fas fa-calendar',
+            # 'url': 'auth/group'
+            'models': [
+                {
+                    'name': '版本：2021-10 4.2',
+                    'icon': 'fa fa-book',
+                    # 'url': 'auth/user'
+                }
+            ]
+        }
+    ]
 }

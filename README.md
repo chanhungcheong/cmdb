@@ -1,5 +1,5 @@
 ##  基于Django的cmdb运维资产管理系统 
-
+参考：https://gitee.com/attacker/cmdb/tree/master
 
 ### 环境
 ![Python](https://img.shields.io/badge/python-3.7.3-blue.svg?style=plastic)
@@ -32,4 +32,5 @@ python manage.py  createsuperuser
 python manage.py runserver 0.0.0.0:8080
 #启动服务
 ```
+
 

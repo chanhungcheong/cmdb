@@ -1,5 +1,5 @@
 # Register your models here.
-
+from django.utils.html import format_html
 
 from django.contrib import admin
 from assets.models import *
@@ -11,6 +11,11 @@ from django.utils.text import capfirst
 class ProxyResource(resources.ModelResource):
     class Meta:
         model = Asset
+
+class VirtualProxyResource(resources.ModelResource):
+    class Meta:
+        model = VirtualAsset
+
 
 
 @admin.register(Asset)
@@ -34,6 +39,7 @@ class Assetlist(ImportExportActionModelAdmin):
         'asset_service_type',
         'asset_manager',
         'put_shelf_time',
+        'edit_button',
     ]    # 分类
     list_filter = [
         'area',
@@ -70,20 +76,86 @@ class Assetlist(ImportExportActionModelAdmin):
 
     exclude = ('create_time', 'update_time')  # 排除字段
     # fields = (('title','category'),'body','tags')  # 指定文章发布选项
+    # 在每行记录后面添加一个编辑的按钮
+
+    def edit_button(self, edit_object):
+        button_html = """<a class="changelink" href="/admin/assets/asset/%s/change/">编辑</a>""" % edit_object.id
+        return format_html(button_html)
+
+    edit_button.short_description = "编辑"
+
+# 名称、备注
+@admin.register(VirtualAsset)
+class VirtualAssetlist(ImportExportActionModelAdmin):
+
+    resource_class = VirtualProxyResource  # 支持导入导出
+
+    # ordering = []
+    list_display = [
+        'area',
+        'hostname',
+        'ip_add',
+        'os',
+        'asset_criticality_choice',
+        'asset_belong_system',
+        'asset_service_type',
+        'manager',
+        'use_company',
+        'use_owner',
+         'put_shelf_time',
+    ]    # 分类
+    list_filter = [
+        'area',
+        'hostname',
+        'ip_add',
+        'os',
+        'asset_criticality_choice',
+        'asset_belong_system',
+        'asset_service_type',
+        'manager',
+        'use_company',
+        'use_owner',
+    ]  # 右侧过滤栏
+    # list_editable = ['manufacturer'] #可编辑项
+    empty_value_display = '-'  # 空数据
+    # fk_fields = ('tags',) # 设置显示外键字段
+
+    list_per_page = 200  # 每页显示条数
+
+    search_fields = [
+        'area',
+        'hostname',
+        'ip_add',
+        'os',
+        'asset_criticality_choice',
+        'asset_belong_system',
+        'asset_service_type',
+        'manager',
+        'use_company',
+        'use_owner',
+     ]  # display 展示表字段，filter过滤分类，search搜索内容
+    date_hierarchy = 'create_time'  # 按时间分类
+
+    exclude = ('create_time', 'update_time')  # 排除字段
+    # fields = (('title','category'),'body','tags')  # 指定文章发布选项
 
 
 # 名称、备注
+
 class Arealist(admin.ModelAdmin):
-    list_display = ['name', 'subnet', 'describe']
+    list_display = ['id', 'name', 'subnet', 'describe']
 # 分类排序
 
 
 class Manufacturerlist(admin.ModelAdmin):
-    list_display = ['name', 'manufacturer', 'contact', 'phone', 'describe']
+    list_display = ['id', 'name', 'manufacturer', 'contact', 'phone', 'describe']
 
 
-class Applicationlist(admin.ModelAdmin):
-    list_display = ['name', 'app_manager', 'manager_phone', 'owner_cop', 'owner_manager', 'describe']
+class Applicationlist(ImportExportActionModelAdmin):
+    class ProxyResource(resources.ModelResource):
+        class Meta:
+            model = Application
+    list_display = ['id', 'name', 'app_manager', 'manager_phone', 'owner_cop', 'owner_manager', 'describe']
 
 
 '''

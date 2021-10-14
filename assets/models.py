@@ -91,6 +91,72 @@ class Asset(models.Model):
         ordering = ['-create_time']
 
 
+class VirtualAsset(models.Model):
+    """    所有虚拟设备的共有数据表    """
+    objects = models.Manager()
+    asset_type_choice = (
+        ('virtual_machine', '虚拟机'),
+        ('container', '容器'),
+        ('app', '应用系统'),
+        ('database', '数据库'),
+        ('middleware', '中间件'),
+        ('other', '其它')
+    )  # 类型
+
+    asset_status_choice = (
+        (0, '在运'),
+        (1, '停运'),
+     )  # 状态
+
+    asset_criticality_choice = (
+        (0, '一般'),
+        (1, '关注'),
+        (2, '重要'),
+        (3, '关键')
+    )  # 重要程度
+    # choices 用于页面上的选择框标签，需要先提供一个二维的二元元组
+
+    area = models.ForeignKey('Area', verbose_name='区域', null=True, blank=True, on_delete=models.CASCADE)
+    hostname = models.CharField(max_length=64, default='', blank=True, null=True, verbose_name='主机名')
+    ip_add = models.CharField(max_length=32, default='', blank=True, null=True, verbose_name='IP地址')
+    os = models.TextField(max_length=64, default='', blank=True, verbose_name='操作系统')
+    mac_add = models.CharField(max_length=48, default='', verbose_name='MAC地址')
+    asset_type = models.CharField(
+        choices=asset_type_choice, max_length=64, default='virtual_machine', verbose_name="类型")
+    asset_criticality_choice = models.SmallIntegerField(
+        choices=asset_criticality_choice, default=0, verbose_name='重要程度')
+    asset_belong_system = models.ForeignKey(
+        'Application', verbose_name='所属系统', default='', blank=True, null=True, on_delete=models.CASCADE)
+    asset_service_type = models.CharField(max_length=64, default='', blank=True, null=True, verbose_name='业务类型')
+    status = models.SmallIntegerField(choices=asset_status_choice, default=0, verbose_name='运行状态')
+    company = models.CharField(max_length=128, default='', null=True, blank=True, verbose_name="所属单位")
+    department = models.CharField(max_length=64, default='', null=True, blank=True, verbose_name="所属部门")
+    manager = models.CharField(max_length=32, default='', null=True, blank=True, verbose_name="系统管理员")
+
+    use_company = models.CharField(max_length=128, default='', null=True, blank=True, verbose_name="实际使用单位")
+    use_department = models.CharField(max_length=64, default='', null=True, blank=True, verbose_name="实际使用部门")
+    use_owner = models.CharField(max_length=32, default='', null=True, blank=True, verbose_name="业务管理员/使用人")
+
+    cpu = models.CharField(max_length=64, default='', blank=True, null=True, verbose_name='CPU')
+    memory = models.CharField(max_length=64, default='', blank=True, null=True, verbose_name='内存')
+    disk = models.CharField(max_length=64, default='', blank=True, null=True, verbose_name='硬盘')
+
+    put_shelf_time = models.DateField(verbose_name='上线时间')
+    create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='创建时间')
+    update_time = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name='更新时间')
+    comment = models.TextField(max_length=256, default='', blank=True, verbose_name='备注')
+
+    def __str__(self):
+        if self.hostname:
+            return self.hostname
+        else:
+            return self.hostname
+
+    class Meta:
+        verbose_name_plural = "虚拟设备信息"
+        ordering = ['-create_time']
+
+
 class Area(models.Model):
     """机房"""
     name = models.CharField(max_length=64, default='', verbose_name="区域")   # xxx机房；阿里云xx区
@@ -134,8 +200,8 @@ class Manufacturer(models.Model):
     """
     供应商
     """
-    name = models.CharField(max_length=32, blank=True, null=True, verbose_name='供应商')
-    manufacturer = models.CharField(max_length=32, blank=True, null=True, verbose_name='制造商')
+    name = models.CharField(max_length=32, blank=True, null=True, verbose_name='制造商')
+    manufacturer = models.CharField(max_length=32, blank=True, null=True, verbose_name='供应商')
     contact = models.CharField(max_length=16, blank=True, null=True, verbose_name='联系人')
     phone = models.CharField(max_length=32, blank=True, null=True, verbose_name='联系电话')
     describe = models.TextField(max_length=128, blank=True, null=True, verbose_name='备注')
@@ -145,40 +211,3 @@ class Manufacturer(models.Model):
 
     class Meta:
         verbose_name_plural = "供应商信息"
-
-
-'''
-class MonitorDevices(models.Model):
-    object = models.Manager()
-
-    port_status_choice = (
-        (0, 'Down'),
-        (1, 'Up'),
-     )  # 端口状态
-
-    device_name = models.CharField(max_length=32, blank=True, null=True, verbose_name='设备名称')
-    port_type = models.CharField(max_length=32, blank=True, null=True, verbose_name='接口类型')
-    port_id = models.CharField(max_length=8, blank=True, null=True, verbose_name='接口编号')
-    port_status = models.CharField(choices=port_status_choice, default=0, verbose_name='接口状态')
-    port_mac = models.CharField(max_length=48, default='', verbose_name='MAC地址')
-    describe = models.TextField(max_length=128, blank=True, null=True, verbose_name='备注')
-'''
-
-'''
-class Labels(models.Model):
-    """
-    设备接口
-    """
-    source = models.TextField(max_length=64, blank=True, null=True, verbose_name='起点')
-    destination = models.TextField(max_length=64, blank=True, null=True, verbose_name='终点')
-    describe = models.TextField(max_length=64, blank=True, null=True, verbose_name='用途')
-
-    def __str__(self):
-        return self.describe
-
-    class Meta:
-        verbose_name_plural = "设备接口"
-'''
-
-
-
