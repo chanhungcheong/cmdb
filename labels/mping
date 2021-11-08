@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+"""
+Create Time: 2021/10/22 22:48
+Author: charlyq
+File: mping2.py
+"""
+import threading
+import subprocess
+
+
+class Ping:
+    def __call__(self, host):
+        result = subprocess.run(
+            'ping -c 1 %s &> /dev/null' % host, shell=True
+        )
+        if result.returncode == 0:
+            print('%s:up' % host)
+        else:
+            print('%s:down' % host)
+
+
+if __name__ == '__main__':
+    ips = ['192.168.50.%s' % i for i in range(1, 255)]
+    for ip in ips:
+        # 创建多线程的方式调用ping函数，args传入参数
+        t = threading.Thread(target=Ping(), args=(ip, ))
+        # 启动线程
+        t.start()
